@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Shopping Cart</title>
+<title>Sanvi Wadhankar 24070521191</title>
+<!-- <h1>Sanvi Wadhankar 24070521191</h1> -->
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+}
+
+.container{
+    width:850px;
+    max-width:100%;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(15px);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:25px;
+    padding:30px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+.title{
+    text-align:center;
+    color:white;
+    margin-bottom:10px;
+    font-size:2.2rem;
+}
+
+.subtitle{
+    text-align:center;
+    color:#eee;
+    margin-bottom:25px;
+}
+
+.cart-counter{
+    text-align:center;
+    color:white;
+    margin-bottom:20px;
+    font-weight:600;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+}
+
+.input-box{
+    position:relative;
+}
+
+.input-box input{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    outline:none;
+    background:white;
+    font-size:15px;
+}
+
+.input-box label{
+    position:absolute;
+    top:-10px;
+    left:15px;
+    background:white;
+    padding:2px 8px;
+    border-radius:8px;
+    font-size:12px;
+    color:#555;
+}
+
+.btn-group{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+}
+
+button{
+    flex:1;
+    border:none;
+    padding:14px;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.add-btn{
+    background:#00c853;
+    color:white;
+}
+
+.bill-btn{
+    background:#2962ff;
+    color:white;
+}
+
+button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.discount-bar{
+    margin-top:20px;
+}
+
+.progress{
+    width:100%;
+    height:18px;
+    background:white;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:linear-gradient(to right,#00c853,#64dd17);
+    transition:0.5s;
+}
+
+.discount-text{
+    color:white;
+    margin-top:8px;
+    text-align:center;
+    font-size:14px;
+}
+
+.cart-section{
+    margin-top:25px;
+}
+
+.cart-item{
+    background:white;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    transition:0.3s;
+}
+
+.cart-item:hover{
+    transform:scale(1.02);
+}
+
+.product-name{
+    font-weight:600;
+    color:#333;
+}
+
+.price-tag{
+    background:#e8f5e9;
+    color:#2e7d32;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:14px;
+    font-weight:600;
+}
+
+.delete-btn{
+    background:#ff1744;
+    color:white;
+    border:none;
+    padding:6px 10px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.summary{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    margin-top:20px;
+}
+
+.summary h3{
+    margin-bottom:10px;
+}
+
+.amount{
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+}
+
+.discount{
+    color:#d32f2f;
+    font-weight:600;
+}
+
+.final{
+    color:#00c853;
+    font-size:22px;
+    font-weight:700;
+}
+
+.badge{
+    display:inline-block;
+    background:#ff1744;
+    color:white;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.toast{
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#00c853;
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    opacity:0;
+    transition:0.4s;
+    z-index:1000;
+}
+
+.toast.show{
+    opacity:1;
+}
+
+.empty{
+    text-align:center;
+    color:white;
+    font-size:18px;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="toast" id="toast"></div>
+
+<div class="container">
+
+    <h1 class="title">🛒 Smart Shopping Cart</h1>
+    <h1 class="title">Sanvi Wadhankar 24070521191</h1>
+    <p class="subtitle">Array • Object • Array of Objects • Reduce Method</p>
+
+    <div class="cart-counter">
+        Items in Cart: <span id="cartCount">0</span>
+    </div>
+
+    <div class="form-grid">
+
+        <div class="input-box">
+            <label>Product Name</label>
+            <input type="text" id="name">
+        </div>
+
+        <div class="input-box">
+            <label>Price (₹)</label>
+            <input type="number" id="price">
+        </div>
+
+        <div class="input-box">
+            <label>Quantity</label>
+            <input type="number" id="quantity">
+        </div>
+
+    </div>
+
+    <div class="btn-group">
+        <button class="add-btn" onclick="addToCart()">
+            ➕ Add Product
+        </button>
+
+        <button class="bill-btn" onclick="calculateBill()">
+            💳 Generate Bill
+        </button>
+    </div>
+
+    <div class="discount-bar">
+        <div class="progress">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="discount-text" id="discountLevel">
+            Current Discount: 0%
+        </div>
+    </div>
+
+    <div class="cart-section" id="output">
+        <div class="empty">No products added yet.</div>
+    </div>
+
+</div>
+
+<script>
+
+// Array of Objects
+let cart = [];
+
+function showToast(message){
+
+    let toast = document.getElementById("toast");
+    toast.innerText = message;
+
+    toast.classList.add("show");
+
+    setTimeout(()=>{
+        toast.classList.remove("show");
+    },2000);
+}
+
+function addToCart(){
+
+    let name = document.getElementById("name").value.trim();
+    let price = Number(document.getElementById("price").value);
+    let quantity = Number(document.getElementById("quantity").value);
+
+    if(name === "" || price <= 0 || quantity <= 0){
+        showToast("Enter valid product details");
+        return;
+    }
+
+    // Object
+    let product = {
+        name:name,
+        price:price,
+        quantity:quantity
+    };
+
+    cart.push(product);
+
+    document.getElementById("name").value="";
+    document.getElementById("price").value="";
+    document.getElementById("quantity").value="";
+
+    showToast("Product Added Successfully");
+
+    displayCart();
+}
+
+function deleteItem(index){
+
+    cart.splice(index,1);
+
+    displayCart();
+
+    showToast("Product Removed");
+}
+
+function displayCart(){
+
+    document.getElementById("cartCount").innerText = cart.length;
+
+    if(cart.length===0){
+        document.getElementById("output").innerHTML=
+        `<div class="empty">No products added yet.</div>`;
+        return;
+    }
+
+    let output="";
+
+    cart.forEach((item,index)=>{
+
+        output+=`
+        <div class="cart-item">
+
+            <div>
+                <div class="product-name">${item.name}</div>
+                <small>
+                    ₹${item.price} × ${item.quantity}
+                </small>
+            </div>
+
+            <div style="display:flex;gap:10px;align-items:center;">
+
+                <div class="price-tag">
+                    ₹${item.price * item.quantity}
+                </div>
+
+                <button class="delete-btn"
+                onclick="deleteItem(${index})">
+                🗑
+                </button>
+
+            </div>
+
+        </div>
+        `;
+    });
+
+    document.getElementById("output").innerHTML = output;
+}
+
+function calculateBill(){
+
+    if(cart.length===0){
+        showToast("Cart is Empty");
+        return;
+    }
+
+    // Reduce Method
+    let total = cart.reduce((sum,item)=>{
+        return sum + (item.price * item.quantity);
+    },0);
+
+    let discountPercent = 0;
+    if(total>9000){
+        discountPercent = 30;
+    }
+    else if(total >= 5000){
+        discountPercent = 20;
+    }
+    else if(total >= 3000){
+        discountPercent = 15;
+    }
+    else if(total >= 1000){
+        discountPercent = 10;
+    }
+    else{
+        discountPercent = 5;
+    }
+
+    let discount = total * (discountPercent/100);
+
+    let finalAmount = total - discount;
+
+    document.getElementById("progressFill").style.width =
+    discountPercent * 5 + "%";
+
+    document.getElementById("discountLevel").innerText =
+    `Current Discount: ${discountPercent}%`;
+
+    let billHTML = "";
+
+    cart.forEach((item,index)=>{
+
+        billHTML+=`
+        <div class="cart-item">
+
+            <div>
+                <div class="product-name">${item.name}</div>
+                <small>
+                    ₹${item.price} × ${item.quantity}
+                </small>
+            </div>
+
+            <div style="display:flex;gap:10px;align-items:center;">
+
+                <div class="price-tag">
+                    ₹${item.price * item.quantity}
+                </div>
+
+                <button class="delete-btn"
+                onclick="deleteItem(${index})">
+                🗑
+                </button>
+
+            </div>
+
+        </div>
+        `;
+    });
+
+    billHTML += `
+
+    <div class="summary">
+
+        <span class="badge">
+            ${discountPercent}% Discount Applied
+        </span>
+
+        <h3>Bill Summary</h3>
+
+        <div class="amount">
+            <span>Total Amount</span>
+            <span>₹${total.toFixed(2)}</span>
+        </div>
+
+        <div class="amount discount">
+            <span>Discount</span>
+            <span>- ₹${discount.toFixed(2)}</span>
+        </div>
+
+        <hr>
+
+        <div class="amount final">
+            <span>Final Amount</span>
+            <span>₹${finalAmount.toFixed(2)}</span>
+        </div>
+
+    </div>
+    `;
+
+    document.getElementById("output").innerHTML = billHTML;
+
+    showToast("Bill Generated Successfully");
+}
+
+</script>
+
+</body>
+</html>
