@@ -1,0 +1,773 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Web Storage - Theme Preference</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background-color: #f3f6fb;
+
+            transition: 0.3s;
+        }
+
+
+        /* Main Card */
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+
+            background-color: white;
+
+            padding: 30px;
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.1);
+
+            transition: 0.3s;
+        }
+
+
+        h1 {
+            text-align: center;
+
+            color: #060b18;
+
+            margin-bottom: 5px;
+        }
+
+
+        .subtitle {
+            text-align: center;
+
+            color: #666;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* Sections */
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+
+        label {
+            display: block;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+            color: #333;
+        }
+
+
+        select {
+            width: 100%;
+
+            padding: 11px;
+
+            border: 1px solid #bbb;
+
+            border-radius: 7px;
+
+            font-size: 15px;
+
+            cursor: pointer;
+        }
+
+
+        /* Buttons */
+
+        .buttons {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 25px;
+        }
+
+
+        button {
+            flex: 1;
+
+            padding: 12px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        #saveBtn {
+            background-color: #1a5cff;
+
+            color: white;
+        }
+
+
+        #saveBtn:hover {
+            background-color: #0d3fb0;
+        }
+
+
+        #removeBtn {
+            background-color: #ef4444;
+
+            color: white;
+        }
+
+
+        #removeBtn:hover {
+            background-color: #dc2626;
+        }
+
+
+        /* Information */
+
+        .info {
+            background-color: #f8fafc;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            margin-top: 25px;
+
+            line-height: 1.7;
+
+            color: #444;
+        }
+
+
+        #message {
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            color: #2e7d32;
+        }
+
+
+        /* =========================
+           DARK THEME
+        ========================= */
+
+        body.dark {
+            background-color: #111827;
+        }
+
+
+        body.dark .container {
+            background-color: #1f2937;
+
+            color: white;
+        }
+
+
+        body.dark h1 {
+            color: #60a5fa;
+        }
+
+
+        body.dark .subtitle {
+            color: #cbd5e1;
+        }
+
+
+        body.dark label {
+            color: #e5e7eb;
+        }
+
+
+        body.dark select {
+            background-color: #374151;
+
+            color: white;
+
+            border-color: #4b5563;
+        }
+
+
+        body.dark .info {
+            background-color: #374151;
+
+            color: #e5e7eb;
+        }
+
+
+        /* =========================
+           BLUE THEME
+        ========================= */
+
+        body.blue {
+            background-color: #5f49bd;
+        }
+
+
+        body.blue .container {
+            background-color: #8683d8;
+        }
+
+
+        body.blue h1 {
+            color: #92aeeb;
+        }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>Web Storage Demo</h1>
+    <p class="subtitle">Sanvi Wadhankar 24070521191</p>
+
+    <p class="subtitle">
+        Save your preferred theme using browser storage
+    </p>
+
+
+    <!-- =========================
+         THEME SELECTION
+    ========================== -->
+
+    <div class="section">
+
+        <label for="theme">
+
+            Select Theme
+
+        </label>
+
+
+        <select id="theme">
+
+            <option value="light">
+                Light Theme
+            </option>
+
+            <option value="dark">
+                Dark Theme
+            </option>
+
+            <option value="blue">
+                Blue Theme
+            </option>
+
+        </select>
+
+    </div>
+
+
+
+    <!-- =========================
+         STORAGE SELECTION
+    ========================== -->
+
+    <div class="section">
+
+        <label for="storage">
+
+            Select Storage Type
+
+        </label>
+
+
+        <select id="storage">
+
+            <option value="local">
+                Local Storage
+            </option>
+
+            <option value="session">
+                Session Storage
+            </option>
+
+        </select>
+
+    </div>
+
+
+
+    <!-- =========================
+         BUTTONS
+    ========================== -->
+
+    <div class="buttons">
+
+        <button
+            id="saveBtn"
+            onclick="savePreference()">
+
+            Save Preference
+
+        </button>
+
+
+        <button
+            id="removeBtn"
+            onclick="removePreference()">
+
+            Remove Preference
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =========================
+         INFORMATION
+    ========================== -->
+
+    <div class="info">
+
+        <b>Current Theme:</b>
+
+        <span id="currentTheme">
+            Light
+        </span>
+
+        <br>
+
+
+        <b>Storage Used:</b>
+
+        <span id="currentStorage">
+            None
+        </span>
+
+        <br>
+
+
+        <b>Saved Value:</b>
+
+        <span id="savedValue">
+            None
+        </span>
+
+    </div>
+
+
+    <p id="message"></p>
+
+
+</div>
+
+
+
+<script>
+
+
+// ==========================================
+// APPLY THEME
+// ==========================================
+
+function applyTheme(theme) {
+
+
+    // Remove previous themes
+
+    document.body.classList.remove(
+        "light",
+        "dark",
+        "blue"
+    );
+
+
+    // Add selected theme
+
+    document.body.classList.add(
+        theme
+    );
+
+
+    // Display current theme
+
+    document.getElementById(
+        "currentTheme"
+    ).innerText =
+        theme.toUpperCase();
+
+}
+
+
+
+// ==========================================
+// SAVE PREFERENCE
+// ==========================================
+
+function savePreference() {
+
+
+    // Get selected theme
+
+    var theme =
+        document.getElementById(
+            "theme"
+        ).value;
+
+
+    // Get selected storage
+
+    var storageType =
+        document.getElementById(
+            "storage"
+        ).value;
+
+
+
+    // --------------------------------------
+    // LOCAL STORAGE
+    // --------------------------------------
+
+    if (storageType === "local") {
+
+
+        // Store theme
+
+        localStorage.setItem(
+            "theme",
+            theme
+        );
+
+
+        // Store which storage was selected
+
+        localStorage.setItem(
+            "storageType",
+            "local"
+        );
+
+
+        // Display information
+
+        document.getElementById(
+            "currentStorage"
+        ).innerText =
+            "Local Storage";
+
+
+        document.getElementById(
+            "savedValue"
+        ).innerText =
+            theme;
+
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "Theme saved in Local Storage!";
+
+    }
+
+
+
+    // --------------------------------------
+    // SESSION STORAGE
+    // --------------------------------------
+
+    else {
+
+
+        // Store theme
+
+        sessionStorage.setItem(
+            "theme",
+            theme
+        );
+
+
+        // Store storage type
+
+        sessionStorage.setItem(
+            "storageType",
+            "session"
+        );
+
+
+        // Display information
+
+        document.getElementById(
+            "currentStorage"
+        ).innerText =
+            "Session Storage";
+
+
+        document.getElementById(
+            "savedValue"
+        ).innerText =
+            theme;
+
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "Theme saved in Session Storage!";
+
+    }
+
+
+
+    // Apply selected theme
+
+    applyTheme(theme);
+
+}
+
+
+
+// ==========================================
+// LOAD SAVED PREFERENCE
+// ==========================================
+
+function loadPreference() {
+
+
+    var theme = null;
+
+    var storageType = null;
+
+
+
+    // --------------------------------------
+    // CHECK LOCAL STORAGE
+    // --------------------------------------
+
+    var localTheme =
+        localStorage.getItem(
+            "theme"
+        );
+
+
+    var localStorageType =
+        localStorage.getItem(
+            "storageType"
+        );
+
+
+
+    // --------------------------------------
+    // CHECK SESSION STORAGE
+    // --------------------------------------
+
+    var sessionTheme =
+        sessionStorage.getItem(
+            "theme"
+        );
+
+
+    var sessionStorageType =
+        sessionStorage.getItem(
+            "storageType"
+        );
+
+
+
+    // --------------------------------------
+    // PRIORITY
+    // --------------------------------------
+
+    if (localTheme !== null) {
+
+        theme =
+            localTheme;
+
+        storageType =
+            localStorageType;
+
+    }
+
+    else if (sessionTheme !== null) {
+
+        theme =
+            sessionTheme;
+
+        storageType =
+            sessionStorageType;
+
+    }
+
+
+
+    // --------------------------------------
+    // APPLY SAVED VALUE
+    // --------------------------------------
+
+    if (theme !== null) {
+
+
+        // Set dropdown value
+
+        document.getElementById(
+            "theme"
+        ).value =
+            theme;
+
+
+        document.getElementById(
+            "storage"
+        ).value =
+            storageType;
+
+
+        // Apply theme
+
+        applyTheme(theme);
+
+
+        // Display storage information
+
+        if (storageType === "local") {
+
+            document.getElementById(
+                "currentStorage"
+            ).innerText =
+                "Local Storage";
+
+        }
+
+        else {
+
+            document.getElementById(
+                "currentStorage"
+            ).innerText =
+                "Session Storage";
+
+        }
+
+
+        document.getElementById(
+            "savedValue"
+        ).innerText =
+            theme;
+
+
+        document.getElementById(
+            "message"
+        ).innerText =
+            "Saved preference loaded automatically.";
+
+    }
+
+}
+
+
+
+// ==========================================
+// REMOVE PREFERENCE
+// ==========================================
+
+function removePreference() {
+
+
+    // Remove from Local Storage
+
+    localStorage.removeItem(
+        "theme"
+    );
+
+    localStorage.removeItem(
+        "storageType"
+    );
+
+
+    // Remove from Session Storage
+
+    sessionStorage.removeItem(
+        "theme"
+    );
+
+    sessionStorage.removeItem(
+        "storageType"
+    );
+
+
+    // Reset theme
+
+    applyTheme("light");
+
+
+    // Reset dropdown
+
+    document.getElementById(
+        "theme"
+    ).value =
+        "light";
+
+
+    // Reset information
+
+    document.getElementById(
+        "currentStorage"
+    ).innerText =
+        "None";
+
+
+    document.getElementById(
+        "savedValue"
+    ).innerText =
+        "None";
+
+
+    document.getElementById(
+        "message"
+    ).innerText =
+        "Saved preference removed.";
+
+}
+
+
+
+// ==========================================
+// LOAD PREFERENCE WHEN PAGE OPENS
+// ==========================================
+
+window.addEventListener(
+    "load",
+    loadPreference
+);
+
+
+</script>
+
+
+</body>
+
+</html>
+
